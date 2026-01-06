@@ -1,0 +1,15 @@
+# .coderabbit.yaml
+language: "pt-BR" # Para ele responder em português
+reviews:
+  profile: "chill" # Pode ser 'chill' ou 'assertive'. Para POC, 'assertive' é mais rigoroso.
+  high_level_summary: true
+  auto_review:
+    enabled: true
+    # Aqui é onde a mágica acontece para o seu caso de DevOps/QA:
+    instructions: >
+      Você é um Engenheiro de Software Senior e QA. 
+      Seu foco principal neste review é a robustez dos testes unitários em Angular.
+      1. Verifique se cada nova lógica de negócio tem um teste correspondente no arquivo .spec.ts.
+      2. Identifique edge cases não cobertos: falhas de rede (404, 500), inputs nulos/undefined, e estados de carregamento.
+      3. Analise se os mocks estão bem implementados ou se são genéricos demais.
+      4. Sugira melhorias de performance e segurança no código Angular.
