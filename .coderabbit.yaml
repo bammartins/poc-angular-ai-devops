@@ -1,37 +1,25 @@
 language: "pt-BR"
 
 reviews:
-  profile: "chill"
-  high_level_summary: false
+  profile: "assertive"
+  high_level_summary: true
 
-  # Instruções por caminho/arquivo (forma correta no schema)
   path_instructions:
     - path: "**/*.spec.ts"
       instructions: >
-        FOCO PRINCIPAL: REVISÃO DE TESTES (Angular/Jasmine/Karma ou Jest).
-        Você DEVE comentar sobre arquivos *.spec.ts quando eles existirem no PR.
-        Revise com profundidade:
-        - qualidade dos asserts (evitar expect(x).toBeTruthy / asserts genéricos)
-        - arranjo do teste (Arrange-Act-Assert), nomes e legibilidade
-        - async: async/await vs fakeAsync/tick/flush, estabilidade e flakiness
-        - mocks/spies: stubs incompletos, mocks permissivos demais, dados irreais
-        - edge cases: null/undefined, valores fora do domínio, listas vazias
-        - cenários de erro: throwError, HTTP 401/404/500, timeout/retry, fallback UI
-        - cobertura de branches (caminho feliz vs erro)
-        Ao final, inclua "Test Gaps" com bullets de testes faltantes.
+        REGRA: Sempre inclua um SUMÁRIO no topo do seu review (mesmo que curto).
+        Em seguida, faça comentários por arquivo.
+
+        Formato obrigatório:
+        1) "Resumo (sempre)" com 3-7 bullets
+        2) "Revisão por arquivo" (obrigatório)
+           - Para cada arquivo *.spec.ts alterado, crie um subtítulo com o caminho do arquivo
+             e liste observações específicas daquele arquivo.
+        3) "Test Gaps" (obrigatório) com lista de testes faltantes e onde adicionar.
+
+        FOCO: qualidade dos testes, edge cases, cenários de erro, flakiness, mocks.
 
     - path: "**/*.ts"
       instructions: >
-        Para mudanças em código de produção (components/services/etc):
-        - Se a mudança não vier acompanhada de testes, aponte explicitamente.
-        - Sugira casos de teste concretos (cenário + arquivo .spec.ts alvo).
-        Priorize sempre a testabilidade e cobertura de edge cases.
-
-    - path: "**/*.html"
-      instructions: >
-        Se houver mudanças de template, sugira testes de template/DOM
-        (ex.: estados loading/empty/error, botões desabilitados, *ngIf/*ngFor).
-
-  # Auto review somente liga/desliga e filtros (sem instructions)
-  auto_review:
-    enabled: true
+        Se houver mudanças em código de produção sem mudanças correspondentes em testes,
+        inclua no "Test Gaps" exatamente quais arquivos *.spec.ts criar/alterar e quais cenários cobrir.
