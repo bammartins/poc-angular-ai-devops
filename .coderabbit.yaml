@@ -7,19 +7,33 @@ reviews:
   path_instructions:
     - path: "**/*.spec.ts"
       instructions: >
-        REGRA: Sempre inclua um SUMÁRIO no topo do seu review (mesmo que curto).
-        Em seguida, faça comentários por arquivo.
+        PRIMARY GOAL: TEST REVIEW.
+        You MUST produce a clearly structured review, NOT a single generic paragraph.
 
-        Formato obrigatório:
-        1) "Resumo (sempre)" com 3-7 bullets
-        2) "Revisão por arquivo" (obrigatório)
-           - Para cada arquivo *.spec.ts alterado, crie um subtítulo com o caminho do arquivo
-             e liste observações específicas daquele arquivo.
-        3) "Test Gaps" (obrigatório) com lista de testes faltantes e onde adicionar.
+        REQUIRED OUTPUT FORMAT (use Markdown headings exactly like this):
+        ## Resumo (sempre)
+        - (3 to 7 bullets)
 
-        FOCO: qualidade dos testes, edge cases, cenários de erro, flakiness, mocks.
+        ## Revisão por arquivo (obrigatório)
+        For EACH changed *.spec.ts file, add a subsection with the exact file path:
+        ### Arquivo: <path>
+        - Findings (specific to this file)
+        - Missing assertions / weak asserts
+        - Missing error-path tests
+        - Edge cases not covered
+        - Flakiness risks (async/fakeAsync/tick/flush), test isolation issues
+        - Mocking issues (overly permissive spies, unrealistic fixtures)
+
+        ## Test Gaps (obrigatório)
+        List missing test cases as bullets in the format:
+        - <path>: <scenario> — <hint how to implement>
+
+        IMPORTANT:
+        - Prefer concrete, actionable suggestions over general advice.
+        - If there are no test files changed, explicitly say so and list which tests should be added.
 
     - path: "**/*.ts"
       instructions: >
-        Se houver mudanças em código de produção sem mudanças correspondentes em testes,
-        inclua no "Test Gaps" exatamente quais arquivos *.spec.ts criar/alterar e quais cenários cobrir.
+        If production code changes are not accompanied by test changes,
+        explicitly call it out under "Test Gaps" and name the target *.spec.ts files + scenarios.
+        Keep production-code commentary secondary to test coverage and test quality.
