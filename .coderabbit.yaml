@@ -4,28 +4,34 @@ reviews:
   profile: "assertive"
   high_level_summary: false
 
+  # Instruções por caminho/arquivo (forma correta no schema)
+  path_instructions:
+    - path: "**/*.spec.ts"
+      instructions: >
+        FOCO PRINCIPAL: REVISÃO DE TESTES (Angular/Jasmine/Karma ou Jest).
+        Você DEVE comentar sobre arquivos *.spec.ts quando eles existirem no PR.
+        Revise com profundidade:
+        - qualidade dos asserts (evitar expect(x).toBeTruthy / asserts genéricos)
+        - arranjo do teste (Arrange-Act-Assert), nomes e legibilidade
+        - async: async/await vs fakeAsync/tick/flush, estabilidade e flakiness
+        - mocks/spies: stubs incompletos, mocks permissivos demais, dados irreais
+        - edge cases: null/undefined, valores fora do domínio, listas vazias
+        - cenários de erro: throwError, HTTP 401/404/500, timeout/retry, fallback UI
+        - cobertura de branches (caminho feliz vs erro)
+        Ao final, inclua "Test Gaps" com bullets de testes faltantes.
+
+    - path: "**/*.ts"
+      instructions: >
+        Para mudanças em código de produção (components/services/etc):
+        - Se a mudança não vier acompanhada de testes, aponte explicitamente.
+        - Sugira casos de teste concretos (cenário + arquivo .spec.ts alvo).
+        Priorize sempre a testabilidade e cobertura de edge cases.
+
+    - path: "**/*.html"
+      instructions: >
+        Se houver mudanças de template, sugira testes de template/DOM
+        (ex.: estados loading/empty/error, botões desabilitados, *ngIf/*ngFor).
+
+  # Auto review somente liga/desliga e filtros (sem instructions)
   auto_review:
     enabled: true
-
-    instructions: >
-      FOCO PRINCIPAL: REVISÃO DE TESTES (Angular).
-      Você deve priorizar e comentar PRIMEIRO sobre arquivos de teste (*.spec.ts).
-      Para cada PR, faça obrigatoriamente:
-
-      1) Se houver arquivos *.spec.ts alterados, revise-os em detalhes:
-         - qualidade dos asserts (evitar toBeTruthy genérico)
-         - uso correto de async/fakeAsync/tick/flush e estabilidade (flaky tests)
-         - mocks/spies (mocks muito permissivos, stubs incompletos, dados irreais)
-         - cobertura de cenários de erro (HTTP 4xx/5xx, throwError, timeouts)
-         - edge cases (null/undefined, arrays vazios, valores fora do domínio, permissões/roles)
-         - organização/clareza (arrange-act-assert, nomes, duplicação)
-
-      2) Se houver mudanças em código de produção (component/service/etc) sem mudanças correspondentes em testes,
-         aponte explicitamente que faltam testes e sugira casos de teste concretos.
-
-      3) Sempre inclua uma seção "Test Gaps" com bullets de testes faltantes e onde adicionar.
-
-      Formato da resposta:
-      - "Revisão dos Testes (*.spec.ts)" (obrigatório)
-      - "Test Gaps (o que falta cobrir)" (obrigatório)
-      - "Sugestões de melhorias no código (secundário)" (opcional)
