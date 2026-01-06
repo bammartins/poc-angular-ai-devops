@@ -1,15 +1,31 @@
-# .coderabbit.yaml
-language: "pt-BR" # Para ele responder em português
+language: "pt-BR"
+
 reviews:
-  profile: "chill" # Pode ser 'chill' ou 'assertive'. Para POC, 'assertive' é mais rigoroso.
-  high_level_summary: true
+  profile: "assertive"
+  high_level_summary: false
+
   auto_review:
     enabled: true
-    # Aqui é onde a mágica acontece para o seu caso de DevOps/QA:
+
     instructions: >
-      Você é um Engenheiro de Software Senior e QA. 
-      Seu foco principal neste review é a robustez dos testes unitários em Angular.
-      1. Verifique se cada nova lógica de negócio tem um teste correspondente no arquivo .spec.ts.
-      2. Identifique edge cases não cobertos: falhas de rede (404, 500), inputs nulos/undefined, e estados de carregamento.
-      3. Analise se os mocks estão bem implementados ou se são genéricos demais.
-      4. Sugira melhorias de performance e segurança no código Angular.
+      FOCO PRINCIPAL: REVISÃO DE TESTES (Angular).
+      Você deve priorizar e comentar PRIMEIRO sobre arquivos de teste (*.spec.ts).
+      Para cada PR, faça obrigatoriamente:
+
+      1) Se houver arquivos *.spec.ts alterados, revise-os em detalhes:
+         - qualidade dos asserts (evitar toBeTruthy genérico)
+         - uso correto de async/fakeAsync/tick/flush e estabilidade (flaky tests)
+         - mocks/spies (mocks muito permissivos, stubs incompletos, dados irreais)
+         - cobertura de cenários de erro (HTTP 4xx/5xx, throwError, timeouts)
+         - edge cases (null/undefined, arrays vazios, valores fora do domínio, permissões/roles)
+         - organização/clareza (arrange-act-assert, nomes, duplicação)
+
+      2) Se houver mudanças em código de produção (component/service/etc) sem mudanças correspondentes em testes,
+         aponte explicitamente que faltam testes e sugira casos de teste concretos.
+
+      3) Sempre inclua uma seção "Test Gaps" com bullets de testes faltantes e onde adicionar.
+
+      Formato da resposta:
+      - "Revisão dos Testes (*.spec.ts)" (obrigatório)
+      - "Test Gaps (o que falta cobrir)" (obrigatório)
+      - "Sugestões de melhorias no código (secundário)" (opcional)
