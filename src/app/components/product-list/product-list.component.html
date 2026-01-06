@@ -1,0 +1,12 @@
+<div class="product-list">
+  <div *ngIf="loading">Carregando...</div>
+  <div *ngIf="error">{{ error }}</div>
+  
+  <div *ngFor="let product of products" class="product-card">
+    <img [src]="product.imageUrl" [alt]="product.name">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.price | currency:'BRL' }}</p>
+    <p>Estoque: {{ product.stock }}</p>
+    <button (click)="addToCart(product)">Adicionar ao Carrinho</button>
+  </div>
+</div>

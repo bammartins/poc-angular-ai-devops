@@ -1,0 +1,15 @@
+<div class="cart">
+  <h2>Carrinho de Compras</h2>
+  
+  <div *ngFor="let item of cartItems" class="cart-item">
+    <span>{{ item.name }}</span>
+    <span>{{ item.price | currency:'BRL' }}</span>
+    <button (click)="removeItem(item.id)">Remover</button>
+  </div>
+  
+  <div class="total">
+    <strong>Total: {{ total | currency:'BRL' }}</strong>
+  </div>
+  
+  <button (click)="checkout()">Finalizar Compra</button>
+</div>
