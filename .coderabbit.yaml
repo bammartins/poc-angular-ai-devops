@@ -5,7 +5,30 @@ reviews:
   high_level_summary: true
   request_changes_workflow: true
   high_level_summary_instructions: >-
-    Always verify that any new components or services have corresponding unit tests. Identify edge cases—such as null/undefined inputs, network errors, and loading states—that are not covered in the .spec.ts files.
+    SUMMARY REQUIREMENT (MANDATORY):
+    At the top of your review, include a structured PR change summary that describes what the developer is sending.
+
+    Use EXACTLY this format and headings:
+
+    ## PR Change Summary (Structured)
+    ### Added
+    - <bullet list of newly added files/modules/features>
+
+    ### Changed
+    - <bullet list of modified files/modules/features and what changed>
+
+    ### Removed
+    - <bullet list of removed files/modules/features>
+
+    ### Tests Impact
+    - Test files added/changed: <list paths or "none">
+    - Main gaps / missing coverage: <1-5 bullets>
+
+    Rules:
+    - Be specific and file-oriented (mention file paths when possible).
+    - Do not write a generic paragraph; always use the sections above.
+    - If a section has no items, write "None".
+    - Keep each bullet concise (one line) and action-oriented.
 
   path_instructions:
     - path: "**/*.spec.ts"
