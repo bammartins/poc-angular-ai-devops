@@ -1,37 +1,42 @@
 language: "pt-BR"
 
 reviews:
-  profile: "chill"
-  high_level_summary: false
+  profile: "assertive"
+  high_level_summary: true
+  request_changes_workflow: true
+  high_level_summary_instructions: >-
+    Always verify that any new components or services have corresponding unit tests. Identify edge cases—such as null/undefined inputs, network errors, and loading states—that are not covered in the .spec.ts files.
 
-  # Instruções por caminho/arquivo (forma correta no schema)
   path_instructions:
     - path: "**/*.spec.ts"
       instructions: >
-        FOCO PRINCIPAL: REVISÃO DE TESTES (Angular/Jasmine/Karma ou Jest).
-        Você DEVE comentar sobre arquivos *.spec.ts quando eles existirem no PR.
-        Revise com profundidade:
-        - qualidade dos asserts (evitar expect(x).toBeTruthy / asserts genéricos)
-        - arranjo do teste (Arrange-Act-Assert), nomes e legibilidade
-        - async: async/await vs fakeAsync/tick/flush, estabilidade e flakiness
-        - mocks/spies: stubs incompletos, mocks permissivos demais, dados irreais
-        - edge cases: null/undefined, valores fora do domínio, listas vazias
-        - cenários de erro: throwError, HTTP 401/404/500, timeout/retry, fallback UI
-        - cobertura de branches (caminho feliz vs erro)
-        Ao final, inclua "Test Gaps" com bullets de testes faltantes.
+        PRIMARY GOAL: TEST REVIEW.
+        You MUST produce a clearly structured review, NOT a single generic paragraph.
+
+        REQUIRED OUTPUT FORMAT (use Markdown headings exactly like this):
+        ## Resumo (sempre)
+        - (3 to 7 bullets)
+
+        ## Revisão por arquivo (obrigatório)
+        For EACH changed *.spec.ts file, add a subsection with the exact file path:
+        ### Arquivo: <path>
+        - Findings (specific to this file)
+        - Missing assertions / weak asserts
+        - Missing error-path tests
+        - Edge cases not covered
+        - Flakiness risks (async/fakeAsync/tick/flush), test isolation issues
+        - Mocking issues (overly permissive spies, unrealistic fixtures)
+
+        ## Test Gaps (obrigatório)
+        List missing test cases as bullets in the format:
+        - <path>: <scenario> — <hint how to implement>
+
+        IMPORTANT:
+        - Prefer concrete, actionable suggestions over general advice.
+        - If there are no test files changed, explicitly say so and list which tests should be added.
 
     - path: "**/*.ts"
       instructions: >
-        Para mudanças em código de produção (components/services/etc):
-        - Se a mudança não vier acompanhada de testes, aponte explicitamente.
-        - Sugira casos de teste concretos (cenário + arquivo .spec.ts alvo).
-        Priorize sempre a testabilidade e cobertura de edge cases.
-
-    - path: "**/*.html"
-      instructions: >
-        Se houver mudanças de template, sugira testes de template/DOM
-        (ex.: estados loading/empty/error, botões desabilitados, *ngIf/*ngFor).
-
-  # Auto review somente liga/desliga e filtros (sem instructions)
-  auto_review:
-    enabled: true
+        If production code changes are not accompanied by test changes,
+        explicitly call it out under "Test Gaps" and name the target *.spec.ts files + scenarios.
+        Keep production-code commentary secondary to test coverage and test quality.
