@@ -3,6 +3,9 @@ language: "pt-BR"
 reviews:
   profile: "assertive"
   high_level_summary: true
+  request_changes_workflow: true
+  high_level_summary_instructions: >-
+    Always verify that any new components or services have corresponding unit tests. Identify edge cases—such as null/undefined inputs, network errors, and loading states—that are not covered in the .spec.ts files.
 
   path_instructions:
     - path: "**/*.spec.ts"
