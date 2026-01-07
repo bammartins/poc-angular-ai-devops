@@ -4,6 +4,10 @@ reviews:
   profile: "assertive"
   high_level_summary: true
   request_changes_workflow: true
+  auto_assign_reviewers: true
+  issue_enrichment:
+    auto_enrich:
+      enabled: true
   high_level_summary_instructions: >-
     SUMMARY REQUIREMENT (MANDATORY):
     At the top of your review, include a structured PR change summary that describes what the developer is sending.
