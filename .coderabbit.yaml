@@ -5,9 +5,18 @@ reviews:
   high_level_summary: true
   request_changes_workflow: true
   auto_assign_reviewers: true
+
   issue_enrichment:
     auto_enrich:
       enabled: true
+
+  # Só dispara auto review quando o workflow adicionar a label
+  auto_review:
+    enabled: true
+    labels:
+      - "unit-test"
+      - "feature"
+
   high_level_summary_instructions: >-
     SUMMARY REQUIREMENT (MANDATORY):
     At the top of your review, include a structured PR change summary that describes what the developer is sending.
@@ -35,35 +44,61 @@ reviews:
     - Keep each bullet concise (one line) and action-oriented.
 
   path_instructions:
+    # "Modo" global baseado na label (feature vs unit-test)
+    - path: "**/*"
+      instructions: >
+        MODE SELECTION (MANDATORY):
+        Determine the review mode based on PR labels:
+        - If label "unit-test" exists: UNIT-TEST MODE
+        - If label "feature" exists: FEATURE MODE
+
+        UNIT-TEST MODE RULES:
+        - Focus ONLY on *.spec.ts files.
+        - Do NOT provide production-code review unless it directly impacts testability or test correctness.
+        - Your detailed findings must be organized "per test file".
+
+        FEATURE MODE RULES:
+        - Review production code + tests.
+        - Still include test gaps and ensure new/changed logic has corresponding tests.
+
+        OUTPUT STRUCTURE (MANDATORY):
+        - Start with the "## PR Change Summary (Structured)" block (exact headings).
+        - Then include a section: "## Revisão por arquivo" with subsections "### Arquivo: <path>"
+          (at minimum for each changed *.spec.ts; in FEATURE MODE also include key production files).
+
+        IMPORTANT:
+        - Do not write a single unstructured gray paragraph. Use headings.
+
     - path: "**/*.spec.ts"
       instructions: >
         PRIMARY GOAL: TEST REVIEW.
-        You MUST produce a clearly structured review, NOT a single generic paragraph.
 
-        REQUIRED OUTPUT FORMAT (use Markdown headings exactly like this):
-        ## Resumo (sempre)
-        - (3 to 7 bullets)
+        MANDATORY:
+        - In UNIT-TEST MODE: comment ONLY about tests (this file), no production code.
+        - In FEATURE MODE: still do deep test review for this file.
 
-        ## Revisão por arquivo (obrigatório)
-        For EACH changed *.spec.ts file, add a subsection with the exact file path:
+        In "## Revisão por arquivo", for EACH changed *.spec.ts file add:
         ### Arquivo: <path>
         - Findings (specific to this file)
-        - Missing assertions / weak asserts
-        - Missing error-path tests
-        - Edge cases not covered
+        - Missing assertions / weak asserts (avoid generic toBeTruthy)
+        - Missing error-path tests (throwError, HTTP 401/404/500, timeouts/retry)
+        - Edge cases not covered (null/undefined, empty arrays, out-of-domain values, loading/empty/error states)
         - Flakiness risks (async/fakeAsync/tick/flush), test isolation issues
         - Mocking issues (overly permissive spies, unrealistic fixtures)
 
+        Always include:
         ## Test Gaps (obrigatório)
-        List missing test cases as bullets in the format:
         - <path>: <scenario> — <hint how to implement>
-
-        IMPORTANT:
-        - Prefer concrete, actionable suggestions over general advice.
-        - If there are no test files changed, explicitly say so and list which tests should be added.
 
     - path: "**/*.ts"
       instructions: >
         If production code changes are not accompanied by test changes,
-        explicitly call it out under "Test Gaps" and name the target *.spec.ts files + scenarios.
-        Keep production-code commentary secondary to test coverage and test quality.
+        explicitly call it out under "### Tests Impact" and also under "## Test Gaps",
+        naming the target *.spec.ts files + scenarios.
+
+        UNIT-TEST MODE:
+        - Do NOT review production code style/logic. Only comment if it blocks tests or causes flakiness.
+
+        FEATURE MODE:
+        - Full review: logic, edge cases, error handling, security/performance considerations.
+        - Keep test coverage/test quality as a primary concern, not secondary.

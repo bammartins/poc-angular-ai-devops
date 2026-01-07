@@ -1,0 +1,60 @@
+name: PR Title Gate & Labeler
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+jobs:
+  validate-and-label:
+    name: validate-and-label
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Validate PR title + apply labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title || "";
+            const prNumber = context.payload.pull_request.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const hasUnitTest = title.includes('[Unit Test]') || title.includes('[UnitTest]') || title.includes('[UnitTest]');
+            const hasFeature = title.includes('[Feature]');
+
+            // Enforce EXACTLY one mode
+            if ((hasUnitTest && hasFeature) || (!hasUnitTest && !hasFeature)) {
+              core.setFailed(
+                "PR title policy failed. Title must contain EXACTLY ONE of: [Unit Test] or [Feature]. " +
+                `Current title: "${title}"`
+              );
+              return;
+            }
+
+            const targetLabel = hasUnitTest ? "unit-test" : "feature";
+            const otherLabel = hasUnitTest ? "feature" : "unit-test";
+
+            // Add correct label
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: prNumber,
+              labels: [targetLabel],
+            });
+
+            // Remove the opposite label if present
+            try {
+              await github.rest.issues.removeLabel({
+                owner,
+                repo,
+                issue_number: prNumber,
+                name: otherLabel,
+              });
+            } catch (e) {
+              // ignore if label wasn't present
+            }
+
+            console.log(`Title OK. Applied label: ${targetLabel}`);
